@@ -1,0 +1,27 @@
+{
+  "name": "flightapp",
+  "version": "1.0.0",
+  "description": "Web App for Flights project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulplusplus/FlightGUI.git"
+  },
+  "author": "Paul Pluszczewicz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paulplusplus/FlightGUI/issues"
+  },
+  "homepage": "https://github.com/paulplusplus/FlightGUI#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
