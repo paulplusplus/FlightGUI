@@ -9,7 +9,7 @@ router.get('/', (req, res) =>{ //Get all airports
     const dbcon = conn('./models/flight.db');
     dbcon.all("SELECT * FROM Airports;", (err, rows) => {
         if(err){
-            res.json({error: "No airports"});
+            res.json({error: "no airports"});
             console.log(err);
         } else{
             res.json(rows);
@@ -28,7 +28,7 @@ router.post('/', (req, res) =>{ //Add an airport
         const dbcon = conn('./models/flight.db');
         dbcon.run('INSERT INTO Airports(AirportName, CityName, Country) VALUES(?, ?, ?)', [name, city, country], (err) => {
             if(err){
-                res.json({error: "No airports"});
+                res.json({error: "can't add airport"});
                 console.log(err);
             } else{
                 res.sendStatus(201);
@@ -37,7 +37,7 @@ router.post('/', (req, res) =>{ //Add an airport
         dbcon.close();
 
     } catch(err){
-        res.json({error: "An error has occurred."});
+        res.json({error: "an error has occurred."});
         console.error(err);
     }
 
@@ -50,7 +50,7 @@ router.put('/:id', (req, res) =>{
         //console.log(id);
         dbcon.all("SELECT * FROM Airports WHERE AirportID=?;", [id], (err, rows) => {
             if(err){
-                res.sendStatus(400).json({error: "No such airport"});
+                res.sendStatus(400).json({error: "no such airport"});
                 console.log(err);
                 
             } else{
@@ -67,12 +67,12 @@ router.put('/:id', (req, res) =>{
                 dbcon.run('UPDATE Airports SET AirportName=?, CityName=?, Country=? WHERE AirportId=?;', [name, city, country, id], (err) => {
                     if(err) console.error(err);
                 });
-                res.json({airport: "Airport modified"});
+                res.json({airport: "airport modified"});
             }
         });
         dbcon.close();
     } catch(err){
-        res.json({error: "An error has occurred"});
+        res.json({error: "an error has occurred"});
         console.error(err);
     }
 });

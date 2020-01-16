@@ -28,5 +28,5 @@ app.listen(port, () => {
 });
 
 /*
-    Flights and Airports routes finished - customers and airlines next
+    We need to work on error handling next - there is, otherwise, a possibility of operational errors crashing our server
 */

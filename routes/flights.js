@@ -10,7 +10,7 @@ router.get('/', (req, res) =>{
     //dbcon.all("SELECT * FROM Flights;", (err, rows) => {
     dbcon.all("SELECT f.FlightID, a.AirlineName, f.Origin, f.Destination, f.CurrentPassengers, f.Capacity, f.FlightStatus, f.Fare, f.FlightDate, f.DepartureTime, f.FlightTime FROM Flights AS f INNER JOIN Airlines AS a on f.AirlineID = a.AirlineID;", (err, rows) => {
         if(err){
-            res.json({error: "No flights"});
+            res.json({error: "no flights"});
             console.log(err);
         } else{
             res.json(rows);
@@ -36,7 +36,7 @@ router.post('/', (req, res) =>{ //Add a flight
         const dbcon = conn('./models/flight.db');
         dbcon.run('INSERT INTO Flights(AirlineID, Origin, Destination, CurrentPassengers, Capacity, FlightStatus, Fare, FlightDate, DepartureTime, FlightTime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [id, origin, destination, cp, cap, fltstat, fare, fltdate, deptime, flttime], (err) => {
             if(err){
-                res.json({error: "No flights"});
+                res.json({error: "can't add flight"});
                 console.log(err);
             } else{
                 res.sendStatus(201);
@@ -45,7 +45,7 @@ router.post('/', (req, res) =>{ //Add a flight
         dbcon.close();
 
     } catch(err){
-        res.json({error: "An error has occurred."});
+        res.json({error: "an error has occurred."});
         console.error(err);
     }
 
@@ -58,7 +58,7 @@ router.put('/:id', (req, res) =>{ //Modify a flight
         //console.log(id);
         dbcon.all("SELECT * FROM Flights WHERE FlightID=?;", [id], (err, rows) => {
             if(err){
-                res.sendStatus(400).json({error: "No such flight"});
+                res.sendStatus(400).json({error: "no such flight"});
                 console.log(err);
                 
             } else{
@@ -90,12 +90,12 @@ router.put('/:id', (req, res) =>{ //Modify a flight
                 dbcon.run('UPDATE Flights SET AirlineID=?, Origin=?, Destination=?, CurrentPassengers=?, Capacity=?, FlightStatus=?, Fare=?, FlightDate=?, DepartureTime=?, FlightTime=? WHERE FlightId=?;', [aid, origin, destination, cp, cap, fltstat, fare, fltdate, deptime, flttime, id], (err) => {
                     if(err) console.error(err);
                 });
-                res.json({flight: "Flight modified"});
+                res.json({flight: "flight modified"});
             }
         });
         dbcon.close();
     } catch(err){
-        res.sendStatus(400).json({error: "An error has occurred"});
+        res.sendStatus(400).json({error: "an error has occurred"});
         console.error(err);
     }
 });
@@ -107,10 +107,10 @@ router.delete('/:id', (req, res) => { //Delete a flight
         dbcon.run('DELETE FROM Flights WHERE FlightID=?', [id], (err) =>{
             if(err) console.error(err);
         })
-        res.sendStatus(200).json({flight: "Flight deleted"});
+        res.sendStatus(200).json({flight: "flight deleted"});
         dbcon.close();
     } catch(err){
-        res.json({error: "An error occurred"});
+        res.json({error: "an error occurred"});
         console.error(err);
     }
 });
@@ -118,3 +118,4 @@ router.delete('/:id', (req, res) => { //Delete a flight
 
 module.exports = router;
 
+//A way to reserve a flight (for some person)
