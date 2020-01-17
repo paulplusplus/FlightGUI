@@ -1,5 +1,5 @@
 const express = require('express');
-
+const config = require('./config');
 const app = express();
 
 //Middleware
@@ -23,8 +23,8 @@ app.get('/', (req, res) => {
 
 
 const port = 3000;
-app.listen(port, () => {
-    console.log(`Server running on port: ${port}`);
+app.listen(config.PORT, () => {
+    console.log(`Server running on port: ${config.PORT}`);
 });
 
 /*
