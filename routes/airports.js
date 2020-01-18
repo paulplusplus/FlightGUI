@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const conn = require('../models/database');
-
+const {adminHandler} = require('../auth'); //Auth function
 //Middleware
 
 //URl/Endpoints
@@ -19,7 +19,7 @@ router.get('/', (req, res) =>{ //Get all airports
     dbcon.close();
 });
 
-router.post('/', (req, res) =>{ //Add an airport
+router.post('/', adminHandler, (req, res) =>{ //Add an airport - Administrator
     try{
         var name = req.body.AirportName;
         var city = req.body.CityName;
@@ -43,7 +43,7 @@ router.post('/', (req, res) =>{ //Add an airport
 
 });
 
-router.put('/:id', (req, res) =>{
+router.put('/:id', adminHandler,  (req, res) =>{ //Modify an airport - administrator
     try{
         const dbcon = conn('./models/flight.db');
         var id = parseInt(req.params.id);

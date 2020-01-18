@@ -13,6 +13,7 @@ app.use('/flights', require('./routes/flights'));
 app.use('/airports', require('./routes/airports'));
 app.use('/customers', require('./routes/customers'));
 app.use('/airlines', require('./routes/airlines'));
+app.use('/reservations', require('./routes/reservations'));
 
 
 const customer =  require('./customers');
@@ -27,6 +28,4 @@ app.listen(config.PORT, () => {
     console.log(`Server running on port: ${config.PORT}`);
 });
 
-/*
-    We need to work on error handling next - there is, otherwise, a possibility of operational errors crashing our server
-*/
+

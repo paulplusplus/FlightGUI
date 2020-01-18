@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const conn = require('../models/database');
+const {authHandler, adminHandler} = require('../auth'); //Auth function
 
 //Middleware
 
 //URl/Endpoints
 router.get('/', (req, res) =>{
     const dbcon = conn('./models/flight.db');
-    //dbcon.all("SELECT * FROM Flights;", (err, rows) => {
     dbcon.all("SELECT f.FlightID, a.AirlineName, f.Origin, f.Destination, f.CurrentPassengers, f.Capacity, f.FlightStatus, f.Fare, f.FlightDate, f.DepartureTime, f.FlightTime FROM Flights AS f INNER JOIN Airlines AS a on f.AirlineID = a.AirlineID;", (err, rows) => {
         if(err){
             res.json({error: "no flights"});
@@ -19,7 +19,7 @@ router.get('/', (req, res) =>{
     dbcon.close();
 });
 
-router.post('/', (req, res) =>{ //Add a flight
+router.post('/', adminHandler, (req, res) =>{ //Add a flight - Administrator
     try{
         var id = req.body.AirlineID;
         var origin = req.body.Origin;
@@ -51,14 +51,14 @@ router.post('/', (req, res) =>{ //Add a flight
 
 });
 
-router.put('/:id', (req, res) =>{ //Modify a flight
+router.put('/:id', adminHandler, (req, res) =>{ //Modify a flight - Administrator
     try{
         const dbcon = conn('./models/flight.db');
         var id = parseInt(req.params.id);
         //console.log(id);
         dbcon.all("SELECT * FROM Flights WHERE FlightID=?;", [id], (err, rows) => {
             if(err){
-                res.sendStatus(400).json({error: "no such flight"});
+                res.status(400).json({error: "no such flight"});
                 console.log(err);
                 
             } else{
@@ -95,19 +95,19 @@ router.put('/:id', (req, res) =>{ //Modify a flight
         });
         dbcon.close();
     } catch(err){
-        res.sendStatus(400).json({error: "an error has occurred"});
+        res.status(400).json({error: "an error has occurred"});
         console.error(err);
     }
 });
 
-router.delete('/:id', (req, res) => { //Delete a flight
+router.delete('/:id', adminHandler, (req, res) => { //Delete a flight - Administrator
     try{
         var id = parseInt(req.params.id);
         const dbcon = conn('./models/flight.db');
         dbcon.run('DELETE FROM Flights WHERE FlightID=?', [id], (err) =>{
             if(err) console.error(err);
-        })
-        res.sendStatus(200).json({flight: "flight deleted"});
+        });
+        res.status(200).json({flight: "flight deleted"});
         dbcon.close();
     } catch(err){
         res.json({error: "an error occurred"});
@@ -116,6 +116,6 @@ router.delete('/:id', (req, res) => { //Delete a flight
 });
 
 
+
 module.exports = router;
 
-//A way to reserve a flight (for some person)

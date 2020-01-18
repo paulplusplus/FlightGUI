@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const conn = require('../models/database');
 const bcrypt = require('bcryptjs');
-const auth = require('../auth'); //Auth function
+const {auth, authHandler} = require('../auth'); //Auth function
 const config = require('../config');
 
 //Middleware
@@ -22,7 +22,7 @@ router.get('/', (req, res) =>{
     dbcon.close();
 });
 
-router.put('/:id', (req, res) => { //Modify a customer
+router.put('/:id', authHandler, (req, res) => { //Modify a customer
     try{
         var id = parseInt(req.params.id);
         const dbcon = conn('./models/flight.db');
@@ -79,8 +79,8 @@ router.post('/auth', async(req, res) => { //Authentication route
         const user = await auth(req.body); //Wait for Promise to resolve and authenticate
         
         //Now - we create a JWT
-        const token = jwt.sign(user, config.JWT_SECRET, {expiresIn : 86400});
-        res.status(200).json({auth: true, token: token, UserName: user.UserName, Email: user.Email});
+        const token = jwt.sign({ID: user.CustID, UserName: user.UserName, priv: user.Admin}, config.JWT_SECRET, {expiresIn : 86400});
+        res.status(200).json({auth: true, token: token, UserName: user.UserName, Email: user.Email}); //No point in sending this JSON? IDK
     } catch(err) {
         //User unauthorized
         res.json({error: "authentication failed"});
