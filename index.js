@@ -1,5 +1,6 @@
 const express = require('express');
 const config = require('./config');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 //Middleware
@@ -7,18 +8,20 @@ const app = express();
 //Body Parser Middleware Init
 app.use(express.json());    //Allows us to handle raw JSON
 app.use(express.urlencoded({ extended: false}));
+app.use(cookieParser());
 
 //Routes
-app.use('/flights', require('./routes/flights'));
-app.use('/airports', require('./routes/airports'));
-app.use('/customers', require('./routes/customers'));
-app.use('/airlines', require('./routes/airlines'));
-app.use('/reservations', require('./routes/reservations'));
+app.use('/api/flights', require('./routes/flights'));
+app.use('/api/airports', require('./routes/airports'));
+app.use('/api/customers', require('./routes/customers'));
+app.use('/api/airlines', require('./routes/airlines'));
+app.use('/api/reservations', require('./routes/reservations'));
 
 
 const customer =  require('./customers');
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
+    //console.log('Cookies: ', req.cookies.jwt);
     res.send(JSON.stringify(customer));
 });
 

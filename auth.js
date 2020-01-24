@@ -48,7 +48,8 @@ function auth(arg){ //Function used to authenticate users
 }
 
 function authHandler(req, res, next){ //Check if authorized - used for protected routes
-    var token = req.headers.authorization;
+    //var token = req.headers.authorization;
+    var token = req.cookies.jwt;
     if(token){ //if present
         jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
             if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
@@ -75,7 +76,8 @@ function authHandler(req, res, next){ //Check if authorized - used for protected
 }
 
 function adminHandler(req, res, next){ //Check if authorized - used for protected ADMIN routes
-    var token = req.headers.authorization;
+    //var token = req.headers.authorization;
+    var token = req.cookies.jwt;
     if(token){ //if present
         jwt.verify(token, config.JWT_SECRET, function(err, decoded) {
             if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });

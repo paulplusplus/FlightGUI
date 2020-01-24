@@ -80,14 +80,14 @@ router.post('/auth', async(req, res) => { //Authentication route
         
         //Now - we create a JWT
         const token = jwt.sign({ID: user.CustID, UserName: user.UserName, priv: user.Admin}, config.JWT_SECRET, {expiresIn : 86400});
-        res.status(200).json({auth: true, token: token, UserName: user.UserName, Email: user.Email}); //No point in sending this JSON? IDK
+        res.status(200).cookie('jwt', token, {httpOnly: true, maxAge: 86400}).json({auth: true, token: token, UserName: user.UserName, Email: user.Email}); //No point in sending this JSON? IDK
     } catch(err) {
         //User unauthorized
-        res.json({error: "authentication failed"});
+        res.status(401).json({error: "authentication failed"});
         console.error(err);
     }
 });
-
+ 
 router.post('/register', async(req, res) => { //Create a user
     const {UserName, Email, Password} = req.body;
     const dbcon = conn('./models/flight.db');

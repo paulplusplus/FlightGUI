@@ -1,0 +1,3 @@
+[submodule "FlightGUIFrontEnd"]
+	path = FlightGUIFrontEnd
+	url = https://github.com/paulplusplus/FlightGUIFrontEnd
