@@ -54,11 +54,13 @@ function authHandler(req, res, next){ //Check if authorized - used for protected
         jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
             if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
             console.log(decoded);
+            console.log(decoded.ID);
+            res.locals.CustID = decoded.ID;
             if(decoded.priv === 1){
                 console.log('admin');
                 next(); //If an admin accesses route - immediately allow
             } else{
-                if(decoded.ID == parseInt(req.params.id) || decoded.ID == req.body.CustID){ //Make certain a user isn't tampering with another user's data
+                if(decoded.ID == parseInt(req.params.id) || decoded.ID == req.body.CustID || req.method == "GET"){ //Make certain a user isn't tampering with another user's data
                     next();
                     console.log('authorized');
                 } else{
@@ -82,7 +84,7 @@ function adminHandler(req, res, next){ //Check if authorized - used for protecte
         jwt.verify(token, config.JWT_SECRET, function(err, decoded) {
             if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
             console.log(decoded);
-            
+            req.locals.CustID = decoded.ID;
             //res.status(200).send(decoded);
             if(decoded.priv === 1){
                 next();

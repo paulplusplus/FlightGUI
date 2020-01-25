@@ -47,7 +47,8 @@ router.delete('/', authHandler, (req, res) => {
 
 router.get('/', authHandler, (req, res) => {
     try{
-        const {CustID} = req.body;
+        const {CustID} = res.locals;
+        console.log(CustID);
         const dbcon = conn('./models/flight.db');
         dbcon.all("SELECT cf.CustID, f.FlightID, a.AirlineName, f.Origin, f.Destination, f.CurrentPassengers, f.Capacity, f.FlightStatus, f.Fare, f.FlightDate, f.DepartureTime, f.FlightTime FROM Cust_Flight AS cf INNER JOIN Flights AS f ON cf.FlightID = f.FlightID INNER JOIN Airlines AS a ON f.AirlineID = a.AirlineID WHERE CustID=?", [CustID], (err, rows) =>{
             if(err){

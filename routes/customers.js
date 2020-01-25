@@ -77,10 +77,14 @@ router.post('/auth', async(req, res) => { //Authentication route
     const {UserName, Email, Password} = req.body; //Destructure and declare
     try{
         const user = await auth(req.body); //Wait for Promise to resolve and authenticate
-        
+        //let date = new Date();
+        //date.setMonth(date.getMonth() + 24);
+        //let expire = date.getTime();
+        let expire = new Date(Number(new Date()) + 63072000000); //2 years
         //Now - we create a JWT
-        const token = jwt.sign({ID: user.CustID, UserName: user.UserName, priv: user.Admin}, config.JWT_SECRET, {expiresIn : 86400});
-        res.status(200).cookie('jwt', token, {httpOnly: true, maxAge: 86400}).json({auth: true, token: token, UserName: user.UserName, Email: user.Email}); //No point in sending this JSON? IDK
+        const token = jwt.sign({ID: user.CustID, UserName: user.UserName, priv: user.Admin}, config.JWT_SECRET, {expiresIn : "7d"});
+        res.status(200).cookie('jwt', token, {httpOnly: true, expires: expire}).json({auth: true, token: token, UserName: user.UserName, Email: user.Email, CustID: user.CustID}); //No point in sending this JSON? IDK
+        //res.status(200).cookie('jwt', token, {httpOnly: true, maxAge: 86400}).json({auth: true, token: token, UserName: user.UserName, Email: user.Email, CustID: user.CustID});
     } catch(err) {
         //User unauthorized
         res.status(401).json({error: "authentication failed"});
