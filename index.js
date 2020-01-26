@@ -1,6 +1,7 @@
 const express = require('express');
 const config = require('./config');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const app = express();
 
 //Middleware
@@ -9,6 +10,7 @@ const app = express();
 app.use(express.json());    //Allows us to handle raw JSON
 app.use(express.urlencoded({ extended: false}));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'build'))); //Allows us to serve our built React app
 
 //Routes
 app.use('/api/flights', require('./routes/flights'));
