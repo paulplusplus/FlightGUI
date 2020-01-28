@@ -13,7 +13,7 @@ router.get('/', (req, res) =>{
     const dbcon = conn('./models/flight.db');
     dbcon.all("SELECT * FROM Customers;", (err, rows) => {
         if(err){
-            res.json({error: "no customers"});
+            res.status(400).json({error: "no customers"});
             console.log(err);
         } else{
             res.json(rows);
@@ -28,7 +28,7 @@ router.put('/:id', authHandler, (req, res) => { //Modify a customer
         const dbcon = conn('./models/flight.db');
         dbcon.all("SELECT * FROM Customers WHERE CustID=?", [id], (err, rows) => {
             if(err){
-                res.json({error: "an error occurred"});
+                res.status(400).json({error: "an error occurred"});
                 console.error(err);
             } else{
                 if(rows.length > 0){
@@ -41,10 +41,10 @@ router.put('/:id', authHandler, (req, res) => { //Modify a customer
                                 var password = hash; //Set password to hashed password
                                 dbcon.run('UPDATE Customers SET UserName=?, Email=?, Password=? WHERE CustId=?;', [username, email, password, id], (err) => {
                                     if(err){
-                                        res.json({error: "unable to update customer"});
+                                        res.status(400).json({error: "unable to update customer"});
                                         console.error(err);
                                     } else{
-                                        res.json({customer: "customer modifed"});
+                                        res.status(200).json({customer: "customer modifed"});
                                     }
                                     dbcon.close();
                                 });
@@ -53,21 +53,21 @@ router.put('/:id', authHandler, (req, res) => { //Modify a customer
                     } else{ //If a new password was NOT provided
                         dbcon.run('UPDATE Customers SET UserName=?, Email=? WHERE CustId=?;', [username, email, id], (err) => {
                             if(err){
-                                res.json({error: "unable to update customer"});
+                                res.status(400).json({error: "unable to update customer"});
                                 console.error(err);
                             } else{
-                                res.json({customer: "customer modified"});
+                                res.status(200).json({customer: "customer modified"});
                             }
                             dbcon.close();
                         });
                     }
                 } else {
-                    res.json({error: "an error has occurred"});
+                    res.status(400).json({error: "an error has occurred"});
                 }
             }
         });
     }catch(err){
-        res.sendStatus(400).json({error: "an error has occurred"});
+        res.status(400).json({error: "an error has occurred"});
         console.error(err);
     }
 

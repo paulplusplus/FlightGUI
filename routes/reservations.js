@@ -21,11 +21,11 @@ router.post('/', authHandler, (req, res) => { //Book a flight - minimum customer
     }
 });
 
-router.delete('/', authHandler, (req, res) => {
+router.delete('/', authHandler, (req, res) => {     // Cancel a booked flight
     try{
         const {CustID, FlightID} = req.body;
         const dbcon = conn('./models/flight.db');
-        console.log('WEHERE??');
+        //console.log('WEHERE??');
         dbcon.run("DELETE FROM Cust_Flight WHERE CustID=? AND FlightID=?;", [CustID, FlightID], (err) => {
             if(err){
                 console.log('ERROR?');
@@ -45,7 +45,7 @@ router.delete('/', authHandler, (req, res) => {
     }
 });
 
-router.get('/', authHandler, (req, res) => {
+router.get('/', authHandler, (req, res) => {  // Get customer reservations
     try{
         const {CustID} = res.locals;
         console.log(CustID);
