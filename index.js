@@ -27,6 +27,14 @@ app.get('/api', (req, res) => {
     res.send(JSON.stringify(customer));
 });
 
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, './build/index.html'), (err) => {
+        if (err){
+            res.status(500).send(err);
+        }
+    })
+});
+
 
 const port = 3000;
 app.listen(config.PORT, () => {

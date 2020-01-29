@@ -10,13 +10,31 @@ router.get('/', (req, res) =>{
     const dbcon = conn('./models/flight.db');
     dbcon.all("SELECT f.FlightID, a.AirlineName, f.Origin, f.Destination, f.CurrentPassengers, f.Capacity, f.FlightStatus, f.Fare, f.FlightDate, f.DepartureTime, f.FlightTime FROM Flights AS f INNER JOIN Airlines AS a on f.AirlineID = a.AirlineID;", (err, rows) => {
         if(err){
-            res.json({error: "no flights"});
+            res.status(400).json({error: "no flights"});
             console.log(err);
         } else{
-            res.json(rows);
+            res.status(200).json(rows);
         }
     });
     dbcon.close();
+});
+
+router.get('/:id', (req, res) =>{  //Get flights for specific airline
+    var id = parseInt(req.params.id);
+    const dbcon = conn('./models/flight.db');
+    try{
+        dbcon.all("SELECT f.FlightID, a.AirlineName, f.Origin, f.Destination, f.CurrentPassengers, f.Capacity, f.FlightStatus, f.Fare, f.FlightDate, f.DepartureTime, f.FlightTime FROM Flights AS f INNER JOIN Airlines AS a on f.AirlineID = a.AirlineID WHERE f.AirlineID=?;", [id], (err, rows) => {
+            if(err){
+                res.status(400).json({error: "no flights for this airline"});
+                console.log(err);
+            } else{
+                res.status(200).json(rows);
+            }
+        });
+        dbcon.close();
+    } catch (err) {
+        req.status(500).json({error: "Server error occurred"});
+    }
 });
 
 router.post('/', adminHandler, (req, res) =>{ //Add a flight - Administrator
@@ -45,7 +63,7 @@ router.post('/', adminHandler, (req, res) =>{ //Add a flight - Administrator
         dbcon.close();
 
     } catch(err){
-        res.json({error: "an error has occurred."});
+        res.status(500).json({error: "an error has occurred."});
         console.error(err);
     }
 
@@ -95,7 +113,7 @@ router.put('/:id', adminHandler, (req, res) =>{ //Modify a flight - Administrato
         });
         dbcon.close();
     } catch(err){
-        res.status(400).json({error: "an error has occurred"});
+        res.status(500).json({error: "an error has occurred"});
         console.error(err);
     }
 });
