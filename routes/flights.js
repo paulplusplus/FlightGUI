@@ -37,6 +37,24 @@ router.get('/:id', (req, res) =>{  //Get flights for specific airline
     }
 });
 
+router.get('/airport/:name', (req, res) => {
+    var name = req.params.name; //Airport name
+    const dbcon = conn('./models/flight.db');
+    try{
+        dbcon.all("SELECT f.FlightID, a.AirlineName, f.Origin, f.Destination, f.CurrentPassengers, f.Capacity, f.FlightStatus, f.Fare, f.FlightDate, f.DepartureTime, f.FlightTime FROM Flights AS f INNER JOIN Airlines AS a on f.AirlineID = a.AirlineID WHERE f.Origin=? OR f.Destination=?;", [name, name], (err, rows) => {
+            if(err){
+                res.status(400).json({error: "no flights for this airport"});
+                console.log(err);
+            } else{
+                res.status(200).json(rows);
+            }
+        });
+        dbcon.close();
+    } catch(err) {
+        req.status(500).json({error: "Server error occurred"});
+    }
+});
+
 router.post('/', adminHandler, (req, res) =>{ //Add a flight - Administrator
     try{
         var id = req.body.AirlineID;
